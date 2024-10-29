@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D3.js Scatterplot</title>
+</head>
+<body style="background-color: #023; color:#fff;">
+    <h1 id="title">Cyclist Scatterplot</h1>
+    <svg id="myCanvas" width="800" height="600"></svg>
+    
+    <!-- Legend Element -->
+    <div id="legend" style="margin-top: 20px; font-size: 14px;">
+        <p><span style="color: steelblue;">●</span> Cyclists without doping allegations</p>
+        <p><span style="color: orange;">●</span> Cyclists with doping allegations</p>
+    </div>
+
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="scatterplot.js"></script>
+</body>
+</html>
