@@ -1,0 +1,77 @@
+/* Base Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+#title {
+    font-size: 2em;
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Scrollable Container for SVG */
+.scroll-container {
+    width: 100vw;
+    max-width: 800px;
+    overflow-x: auto;
+    padding: 0 10px;
+}
+
+svg {
+    width: 90vw;
+    max-width: 800px;
+    height: calc(60vh - 40px);
+    margin: 20px 0;
+    overflow: visible;
+}
+
+/* Landscape Orientation Overlay */
+#landscape-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    font-size: 1.5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    z-index: 1000;
+}
+
+#landscape-overlay span {
+    padding: 20px;
+    max-width: 80%;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 8px;
+}
+
+/* Legend Styling */
+#legend {
+    font-size: 1em;
+    text-align: center;
+    margin: 10px 0;
+    position: fixed;
+    bottom: 10px;
+    width: 100%;
+    padding: 8px;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Tooltip Styling */
+#tooltip {
+    font-size: 0.9em;
+    max-width: 200px;
+    word-wrap: break-word;
+    transition: opacity 0.2s ease;
+}

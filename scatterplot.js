@@ -1,11 +1,14 @@
-let width = 800;
-let height = 600;
-const padding = 60;
+// Initial dimensions based on viewport size
+let width = Math.min(window.innerWidth * 0.9, 800);
+let height = Math.min(window.innerHeight * 0.56, 600);
+let padding = Math.min(window.innerWidth * 0.1, 60);
 
-// Select the SVG and set up dimensions
-const svg = d3.select("#myCanvas");
+// Select SVG and set dimensions
+const svg = d3.select("#myCanvas")
+              .attr("width", width)
+              .attr("height", height);
 
-// Define tooltip using D3 and set it to hidden initially
+// Define tooltip using D3 and set to hidden initially
 const tooltip = d3.select("body")
                 .append("div")
                 .attr("id", "tooltip")
@@ -17,13 +20,12 @@ const tooltip = d3.select("body")
                 .style("opacity", 0)
                 .style("pointer-events", "none");
 
-// Load data and draw the scatter plot
+// Load data and draw scatter plot
 d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/cyclist-data.json")
 .then(data => {
-  // Parse date and time
   data.forEach(d => {
-    d.Year = new Date(d.Year, 0);  // Convert year to a Date object
-    d.Time = new Date(1970, 0, 1, 0, ...d.Time.split(':').map(Number)); // Convert time to a Date object
+    d.Year = new Date(d.Year, 0);
+    d.Time = new Date(1970, 0, 1, 0, ...d.Time.split(':').map(Number));
   });
 
   // Set up scales
@@ -35,36 +37,39 @@ d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/mas
                     .domain(d3.extent(data, d => d.Time))
                     .range([height - padding, padding]);
 
+  // Set up responsive year format
+  const formatYear = window.innerWidth < 650 ? d3.timeFormat("'%y") : d3.timeFormat("%Y");
+
   // Draw x and y axes
   svg.append("g")
       .attr("id", "x-axis")
       .attr("transform", `translate(0, ${height - padding})`)
-      .call(d3.axisBottom(xScale).tickFormat(d3.timeFormat("%Y")));
+      .call(d3.axisBottom(xScale).tickFormat(formatYear));
 
   svg.append("g")
       .attr("id", "y-axis")
       .attr("transform", `translate(${padding}, 0)`)
       .call(d3.axisLeft(yScale).tickFormat(d3.timeFormat("%M:%S")));
-
-  // Draw each data point as an SVG circle
+  
+  // Draw data points
   svg.selectAll("circle")
-      .data(data)
-      .enter()
-      .append("circle")
-      .attr("class", "dot")
-      .attr("cx", d => xScale(d.Year))
-      .attr("cy", d => yScale(d.Time))
-      .attr("r", 5)
-      .attr("fill", "steelblue")
-      .attr("data-xvalue", d => d.Year.getFullYear())
-      .attr("data-yvalue", d => d.Time)
-      .on("mouseover", (event, d) => {
+    .data(data)
+    .enter()
+    .append("circle")
+    .attr("class", "dot")
+    .attr("cx", d => xScale(d.Year))
+    .attr("cy", d => yScale(d.Time))
+    .attr("r", Math.max(5 * (width / 800), 3))
+    .attr("fill", d => d.Doping ? "orange" : "steelblue")
+    .attr("data-xvalue", d => d.Year.getFullYear())
+    .attr("data-yvalue", d => d.Time)
+    .on("mouseover", (event, d) => {
         tooltip.style("opacity", 1)
-                .attr("data-year", d.Year.getFullYear())
-                .html(`Year: ${d.Year.getFullYear()}<br>Time: ${d3.timeFormat("%M:%S")(d.Time)}`)
-                .style("left", `${event.pageX + 10}px`)
-                .style("top", `${event.pageY + 10}px`);
-      })
-      .on("mouseout", () => tooltip.style("opacity", 0));
+               .attr("data-year", d.Year.getFullYear())
+               .html(`Year: ${d.Year.getFullYear()}<br>Time: ${d3.timeFormat("%M:%S")(d.Time)}`)
+               .style("left", `${event.pageX + 10}px`)
+               .style("top", `${event.pageY + 10}px`);
+    })
+    .on("mouseout", () => tooltip.style("opacity", 0));
 })
 .catch(error => console.log("Error:", error));
